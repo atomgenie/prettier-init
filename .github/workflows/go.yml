@@ -1,22 +1,46 @@
 name: Go
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
 
 jobs:
+    build-linux:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
+            - name: Set up Go
+              uses: actions/setup-go@v2
+              with:
+                  go-version: 1.15
 
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.15
+            - name: Build
+              run: go build -v .
 
-    - name: Build
-      run: go build -v .
+            - name: LinuxArtifacts
+              uses: actions/upload-artifact@v2
+              with:
+                  name: ubuntu
+                  path: prettier-init
+
+    build-mac:
+        runs-on: macos-11.0
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up Go
+              uses: actions/setup-go@v2
+              with:
+                  go-version: 1.15
+
+            - name: Build
+              run: go build -v .
+
+            - name: MacArtifacts
+              uses: actions/upload-artifact@v2
+              with:
+                  name: macos
+                  path: prettier-init
